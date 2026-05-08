@@ -2,3 +2,7 @@
 /logs
 /说明.txt
 /__pycache__
+/.env
+.vercel/
+.venv/
+*.pyc

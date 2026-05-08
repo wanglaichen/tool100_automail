@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_PATH = BASE_DIR / "data"
 ENV_FILE = BASE_DIR / ".env"
 
 
@@ -24,6 +23,18 @@ def load_env_file(path: Path = ENV_FILE) -> None:
 
 
 load_env_file()
+
+
+def resolve_data_path() -> Path:
+    configured_path = os.getenv("DATA_DIR")
+    if configured_path:
+        return Path(configured_path)
+    if os.getenv("VERCEL"):
+        return Path("/tmp/tools100-mail-auto")
+    return BASE_DIR / "data"
+
+
+DATA_PATH = resolve_data_path()
 
 
 class AppConfig:
