@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邮箱自动注册与收件观察</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="hero-panel">
+            <div>
+                <p class="eyebrow">Mail Workspace</p>
+                <h1>邮箱自动注册与邮件观察台</h1>
+                <p class="hero-copy">
+                    当前提供者：<strong>{{ provider }}</strong>。批量创建测试邮箱，邮箱信息和邮件索引都写入本地 JSON 文件，
+                    不使用数据库，后续可以替换其他邮箱 provider。
+                </p>
+            </div>
+            <div class="hero-metrics" id="summaryCards">
+                <article>
+                    <span>已登记邮箱</span>
+                    <strong id="mailboxCount">0</strong>
+                </article>
+                <article>
+                    <span>累计创建</span>
+                    <strong id="createdMailboxCount">0</strong>
+                </article>
+                <article>
+                    <span>已同步邮件</span>
+                    <strong id="emailCount">0</strong>
+                </article>
+            </div>
+        </header>
+
+        <div class="alert alert-danger d-none" id="errorBox"></div>
+        <div class="alert alert-success d-none" id="successBox"></div>
+
+        <main class="main-grid">
+            <section class="panel action-panel">
+                <div class="panel-header">
+                    <h2>批量注册邮箱</h2>
+                    <span class="badge text-bg-light">落地文件</span>
+                </div>
+                <div class="action-form">
+                    <label class="form-label" for="createCount">注册数量和邮箱后缀</label>
+                    <div class="input-row">
+                        <input id="createCount" class="form-control form-control-lg" type="number" min="1" max="50" value="1">
+                        <select id="domainOption" class="form-select form-select-lg" required>
+                            <option value="zazamail.link" selected>zazamail.link</option>
+                            <option value="temprelay.net">temprelay.net</option>
+                            <option value="slurpinbox.com">slurpinbox.com</option>
+                        </select>
+                        <button id="createButton" class="btn btn-accent btn-lg">开始注册</button>
+                    </div>
+                    <p class="form-hint">每次点击会按选中的后缀创建指定数量的 MailSlurp 邮箱，并将结果写入本地 `data/mailboxes.json`。</p>
+                </div>
+
+                <div class="meta-grid">
+                    <div>
+                        <span>最后创建时间</span>
+                        <strong id="lastMailboxCreatedAt">-</strong>
+                    </div>
+                    <div>
+                        <span>最后同步时间</span>
+                        <strong id="lastSyncAt">-</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel inbox-panel">
+                <div class="panel-header">
+                    <h2>邮箱列表</h2>
+                    <div class="toolbar">
+                        <button id="syncProviderButton" class="btn btn-accent btn-sm">同步平台邮箱</button>
+                        <button id="refreshMailboxesButton" class="btn btn-outline-light btn-sm">刷新邮件</button>
+                        <button id="toggleAutoRefreshButton" class="btn btn-outline-light btn-sm">自动刷新: 关</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>邮箱地址</th>
+                                <th>邮件数</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mailboxTableBody">
+                            <tr><td colspan="4" class="empty-cell">暂无邮箱</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel email-panel">
+                <div class="panel-header">
+                    <h2>邮件窗口</h2>
+                    <span id="activeMailboxLabel">未选择邮箱</span>
+                </div>
+                <div class="email-layout">
+                    <aside class="email-list" id="emailList">
+                        <div class="empty-state">选择左侧邮箱后查看邮件</div>
+                    </aside>
+                    <article class="email-detail" id="emailDetail">
+                        <div class="empty-state">点击邮件后查看详情</div>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        window.APP_CONFIG = {
+            pollIntervalMs: {{ poll_interval_ms | tojson }}
+        };
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
