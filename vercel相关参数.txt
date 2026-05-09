@@ -1,0 +1,28 @@
+
+一、vercel的token在这里
+https://vercel.com/account/settings/tokens?utm_source=chatgpt.com
+
+二、VERCEL_PROJECT_ID
+在
+Vercel Dashboard
+→ 你的项目
+→ Settings
+→ General
+
+三、VERCEL_ORG_ID 在
+https://vercel.com/chenwanglai-9571/~/settings
+
+
+四、MailSlurp的token：
+  在 Vercel 上这样设置：
+
+  1. 打开 Vercel Dashboard
+  2. 进入你的项目
+  3. Settings → Environment Variables
+  4. 新增变量：
+
+  Name:  MAILSLURP_API_KEY
+  Value: 你的 MailSlurp API Key
+  Environment: Production
+
+  5. 保存后重新部署一次
